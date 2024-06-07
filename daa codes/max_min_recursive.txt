@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int findMaxRec(int arr[], int n) {
+    if (n == 1)
+        return arr[0];
+    int maxFromRest = findMaxRec(arr, n - 1);
+    if (arr[n - 1] > maxFromRest)
+        return arr[n - 1];
+    else
+        return maxFromRest;
+}
+
+
+int findMinRec(int arr[], int n) {
+    if (n == 1)
+        return arr[0];
+    int minFromRest = findMinRec(arr, n - 1);
+    if (arr[n - 1] < minFromRest)
+        return arr[n - 1];
+    else
+        return minFromRest;
+}
+
+int main() {
+    int n;
+    printf("Enter the number of integers: ");
+    scanf("%d", &n);
+
+    int arr[n];
+    printf("Enter %d integers:\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    int max = findMaxRec(arr, n);
+    int min = findMinRec(arr, n);
+
+    printf("Maximum element: %d\n", max);
+    printf("Minimum element: %d\n", min);
+
+    return 0;
+}

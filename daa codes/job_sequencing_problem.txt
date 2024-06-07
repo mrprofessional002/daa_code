@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    char id;
+    int deadline;
+    int profit;
+} Job;
+
+// Compare function for sorting jobs by profit (in decreasing order)
+int compare(const void* a, const void* b) {
+    return ((Job*)b)->profit - ((Job*)a)->profit;
+}
+
+// Find an available slot for a job
+int getSlot(int dl, int filled[]) {
+    for (int i = dl - 1; i >= 0; i--) {
+        if (!filled[i]) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void jobSequencing(Job jobs[], int n) {
+    qsort(jobs, n, sizeof(Job), compare);
+    int filled[n];
+    for (int i = 0; i < n; i++) {
+        filled[i] = 0;
+    }
+
+    char scheduledJobs[n]; // Array to store scheduled job IDs
+
+    for (int i = 0; i < n; i++) {
+        int avail = getSlot(jobs[i].deadline, filled);
+        if (avail != -1) {
+            filled[avail] = 1;
+            scheduledJobs[avail] = jobs[i].id; // Store job ID in the array
+        }
+    }
+
+    printf("Maximum profit sequence of jobs (in array format):\n");
+    for (int i = 0; i < n; i++) {
+        if (filled[i]) {
+            printf("%c ", scheduledJobs[i]);
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int numJobs;
+    printf("Enter the number of jobs: ");
+    scanf("%d", &numJobs);
+
+    Job jobs[numJobs];
+    for (int i = 0; i < numJobs; i++) {
+        printf("Enter details for Job %d (ID Deadline Profit): ", i + 1);
+        scanf(" %c %d %d", &jobs[i].id, &jobs[i].deadline, &jobs[i].profit);
+    }
+
+    jobSequencing(jobs, numJobs);
+
+    return 0;
+}

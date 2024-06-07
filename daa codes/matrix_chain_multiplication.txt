@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+int matrix_chain_mul(int dimensions[], int i, int j) {
+    if (i == j)
+        return 0;
+
+    int min_mul = INT_MAX;
+    for (int k = i; k < j; k++) {
+        int count = matrix_chain_mul(dimensions, i, k) +
+                    matrix_chain_mul(dimensions, k + 1, j) +
+                    dimensions[i - 1] * dimensions[k] * dimensions[j];
+
+        if (count < min_mul)
+            min_mul = count;
+    }
+    return min_mul;
+}
+
+int main() {
+    int size;
+    printf("Enter the number of matrices: ");
+    if (scanf("%d", &size) != 1) {
+        printf("Error reading size\n");
+        return 1;
+    }
+
+    int* dimensions = malloc((size + 1) * sizeof(int));
+    if (dimensions == NULL) {
+        printf("Error allocating memory\n");
+        return 1;
+    }
+
+    printf("Enter the dimensions:\n");
+    for (int i = 0; i <= size; i++) {
+        printf("dimensions %d: ", i);
+        if (scanf("%d", &dimensions[i]) != 1) {
+            printf("Error reading dimensions\n");
+            free(dimensions);
+            return 1;
+        }
+    }
+
+    printf("Minimum number of multiplications = %d\n",
+           matrix_chain_mul(dimensions, 1, size));
+
+    free(dimensions);
+    return 0;
+}
